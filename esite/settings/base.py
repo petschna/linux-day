@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'esite.customer',
     'esite.home',
     'esite.caching',
+    'esite.event',
     #'esite.charm',
     #'esite.articles',
     ##'esite.documents',
@@ -209,6 +210,7 @@ GRAPHQL_API = {
         'home',
         'registration',
         'survey',
+        'event',
     ],
     'PREFIX': {
     },
@@ -232,7 +234,7 @@ GRAPHQL_JWT = {
     'JWT_ALLOW_ARGUMENT': True,
 }
 
-GRAPPLE_APPS = {
+API_APPS = {
     "home": "",
     #"articles": "",
     "documents": "",
@@ -240,7 +242,9 @@ GRAPPLE_APPS = {
     #"news": "",
     "people": "",
     #"standardpages": "",
+    "event": "",
 }
+
 
 #> Password validation
 # The list of validators that are used to check the strength of passwords, see
