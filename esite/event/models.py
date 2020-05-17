@@ -24,6 +24,12 @@ class Event(models.Model):
     event_to = models.DateField(null=True, blank=True)
     event_attendees = models.TextField(null=True, blank=True)
     is_active = models.BooleanField(null=False, blank=False, default=True)
+    assoc_sessions = models.ForeignKey(Session,
+                                       null=True,
+                                       blank=True,
+                                       on_delete=models.SET_NULL,
+                                       related_name='+',
+                                       verbose_name="Associated Session")
 
     panels = [
         FieldPanel('is_active'),
@@ -32,6 +38,7 @@ class Event(models.Model):
         FieldPanel('event_from'),
         FieldPanel('event_to'),
         FieldPanel('event_attendees'),
+        FieldPanel('assoc_sessions', widget=SessionChooser),
     ]
 
     def __str__(self):
