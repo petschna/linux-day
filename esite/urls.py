@@ -32,13 +32,18 @@ from graphene_django.views import GraphQLView
 
 from wagtail.images.views.serve import ServeView
 
+from esite.utils.views import favicon, robots
+
 # !!! Serve static and media files from development server
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
+from esite.api.urls import *
+
 urlpatterns = [
-    url(r'^admin/', include(wagtailadmin_urls)),
-    url(r'^documents/', include(wagtaildocs_urls)),
+    #path('django-admin/', admin.site.urls),
+    path('admin/', include(wagtailadmin_urls)),
+    path('documents/', include(wagtaildocs_urls)),
 ]
 
 # !!! Serve static and media files from development server
