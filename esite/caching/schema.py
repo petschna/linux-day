@@ -5,7 +5,10 @@ from graphene_django import DjangoObjectType
 from graphql import GraphQLError
 from graphql_jwt.decorators import login_required, permission_required, staff_member_required, superuser_required
 
+from wagtail.core.models import Page
+
 from esite.user.models import User
+from esite.profile.models import ProfilePage
 from esite.customer.models import Customer
 from esite.registration.schema import UserType
 
@@ -28,11 +31,13 @@ class CacheUser(graphene.Mutation):
     def mutate(self, info, token, platform_data):
         user = info.context.user
 
-        user.platform_data = platform_data
+        #user.platform_data = platform_data
+        #user.save()
 
-        user.save()
+        profile_page = Page.objects.get(slug=f"{user.username}").specific
+
+        profile_page.platform_data = platform_data
+
+        profile_page.save_revision().publish()
 
         return CacheUser(user=user)
-
-class Mutation(graphene.ObjectType):
-    cache_user = CacheUser.Field()

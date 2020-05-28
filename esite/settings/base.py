@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 """
 
 import os
+from datetime import timedelta
 
 env = os.environ.copy()
 
@@ -44,8 +45,12 @@ INSTALLED_APPS = [
     'esite.user',
     'esite.customer',
     'esite.home',
+    'esite.profile',
     'esite.caching',
+    'esite.gift',
     'esite.event',
+    'esite.session',
+    #'esite.jwtauth',
     #'esite.charm',
     #'esite.articles',
     ##'esite.documents',
@@ -61,6 +66,7 @@ INSTALLED_APPS = [
     'esite.survey',
 
     'esite.colorfield',
+    'esite.log',
 
     # Wagtail core apps
     #'wagtail.api.v2',
@@ -79,6 +85,7 @@ INSTALLED_APPS = [
     'wagtail.search',
     'wagtail.admin',
     'wagtail.core',
+    'generic_chooser',
 
     # Third party apps
     'corsheaders',
@@ -90,6 +97,7 @@ INSTALLED_APPS = [
     'wagtailcaptcha',
     #"grapple",
     "graphene_django",
+    'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
     #"channels",
     'wagtailfontawesome',
 
@@ -145,6 +153,9 @@ MIDDLEWARE = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(PROJECT_DIR, 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -167,6 +178,7 @@ TEMPLATES = [
 # If True, the whitelist will not be used and all origins will be accepted.
 # See https://pypi.org/project/django-cors-headers/
 CORS_ORIGIN_ALLOW_ALL = True
+
 
 #> URL configuration
 # A string representing the full Python import path to your root URL configuration.
@@ -203,11 +215,10 @@ WAGTAILSEARCH_BACKENDS = {
 
 
 # f isetup hope I get to comment this
-
-
 GRAPHQL_API = {
     'APPS': [
         'home',
+        'profile',
         'registration',
         'survey',
         'event',
@@ -232,16 +243,17 @@ GRAPHENE = {
 
 GRAPHQL_JWT = {
     'JWT_ALLOW_ARGUMENT': True,
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_LONG_RUNNING_REFRESH_TOKEN': True,
+    'JWT_EXPIRATION_DELTA': timedelta(minutes=5),
+    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
 }
 
 API_APPS = {
     "home": "",
-    #"articles": "",
-    "documents": "",
-    "images": "",
-    #"news": "",
-    "people": "",
-    #"standardpages": "",
+    "profile": "",
+    "registration": "",
+#    "survey": "",
     "event": "",
 }
 
@@ -273,6 +285,7 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/stable/topics/i18n/
 LANGUAGE_CODE = 'en-gb'
@@ -293,6 +306,7 @@ USE_TZ = True
 STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, 'static'),
 ]
+
 
 # This is where Django will put files collected from application directories
 # and custom direcotires set in "STATICFILES_DIRS" when
@@ -345,11 +359,10 @@ WAGTAILADMIN_RICH_TEXT_EDITORS = {
     },
 }
 
+
 # Custom document model
 # https://docs.wagtail.io/en/stable/advanced_topics/documents/custom_document_model.html
 #WAGTAILDOCS_DOCUMENT_MODEL = 'documents.CustomDocument'
-
-
 PASSWORD_REQUIRED_TEMPLATE = 'patterns/pages/wagtail/password_required.html'
 
 
@@ -361,14 +374,15 @@ DEFAULT_PER_PAGE = 10
 PATTERN_LIBRARY_ENABLED = 'true'
 PATTERN_LIBRARY_TEMPLATE_DIR = 'templates'
 
+
 # Recaptcha
 # These settings are required for the captcha challange to work.
 # https://github.com/springload/wagtail-django-recaptcha
-
 if 'RECAPTCHA_PUBLIC_KEY' in env and 'RECAPTCHA_PRIVATE_KEY' in env:
     NOCAPTCHA = True
     RECAPTCHA_PUBLIC_KEY = env['RECAPTCHA_PUBLIC_KEY']
     RECAPTCHA_PRIVATE_KEY = env['RECAPTCHA_PRIVATE_KEY']
+
 
 # Wagtail forms not used so silence captcha warning
 SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']

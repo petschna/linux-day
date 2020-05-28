@@ -10,13 +10,17 @@ from wagtail.admin.edit_handlers import (
     InlinePanel, MultiFieldPanel
 )
 from wagtail.core import blocks
+from wagtail.core.models import Page
 from wagtail.core.fields import StreamField, RichTextField
 from wagtail.snippets.edit_handlers import SnippetChooserPanel
 from wagtail.admin.edit_handlers import TabbedInterface, ObjectList, InlinePanel, StreamFieldPanel, MultiFieldPanel, FieldPanel
 from wagtail.contrib.forms.models import AbstractEmailForm, AbstractFormField, AbstractFormSubmission
 from wagtail.contrib.forms.models import AbstractForm, AbstractFormField, AbstractEmailForm, AbstractFormField, AbstractFormSubmission
-from wagtail.admin.utils import send_mail
+from wagtail.admin.mail import send_mail
+
 from esite.user.models import User
+from esite.gift.models import GiftCode
+from esite.profile.models import ProfilePage
 
 # Create your registration related models here.
 
@@ -121,13 +125,24 @@ class RegistrationFormPage(AbstractEmailForm):
         return RegistrationFormSubmission
 
     # Create a new user
-    def create_user(self, username, customer_id, birthdate, telephone, address, city, postal_code, email, country, newsletter, platform_data, education_data, sources, verified, password, registration_data):
+    def create_user(self, username, customer_id, telephone, address, city, postal_code, email, country, newsletter, platform_data, sources, verified, first_name, last_name, password, registration_data, gift_code):
         # enter the data here
         user = get_user_model()(
             username=username,
             is_customer=True,
+            is_active = False,
             customer_id=customer_id,
-            birthdate=birthdate,
+            registration_data=registration_data,
+        )
+
+        user.set_password(password)
+
+        parent_page = Page.objects.get(url_path="/home/registration/").specific
+        
+        profile_page = ProfilePage(
+            title=f"{user.username}",
+            slug=f"{user.username}",
+            username = f"{user.username}",
             telephone=telephone,
             address=address,
             city=city,
@@ -136,15 +151,72 @@ class RegistrationFormPage(AbstractEmailForm):
             country=country,
             newsletter=newsletter,
             platform_data=platform_data,
-            education_data=education_data,
             sources=sources,
             verified=verified,
-            registration_data=registration_data,
+            available_for_hire = verified,
+            first_name=first_name,
+            last_name=last_name,
+            website=f"https://erebos.xyz",
+            company=f"f"
         )
 
-        user.set_password(password)
+        if gift_code:
+            gift = GiftCode.objects.get(pk=f'{gift_code}')
+            if gift.is_active:
+                profile_page = ProfilePage(
+                    title=f"{user.username}",
+                    slug=f"{user.username}",
+                    username = f"{user.username}",
+                    telephone=telephone,
+                    address=address,
+                    city=city,
+                    postal_code=postal_code,
+                    email=email,
+                    country=country,
+                    newsletter=newsletter,
+                    platform_data=platform_data,
+                    sources=sources,
+                    verified=True,
+                    available_for_hire = verified,
+                    first_name=first_name,
+                    last_name=last_name,
+                    website=f"https://erebos.xyz",
+                    company=f"f",
+                    bids='{'+'"bids":['+f'"{gift.bid}"'+']}',
+                    tids='{'+'"tids":['+f'"{gift.tid}"'+']}',
+                )
+
+                gift.is_active=False
+
+            gift.save()
+        
+        else:
+            profile_page = ProfilePage(
+                title=f"{user.username}",
+                slug=f"{user.username}",
+                username = f"{user.username}",
+                telephone=telephone,
+                address=address,
+                city=city,
+                postal_code=postal_code,
+                email=email,
+                country=country,
+                newsletter=newsletter,
+                platform_data=platform_data,
+                sources=sources,
+                verified=verified,
+                available_for_hire = verified,
+                first_name=first_name,
+                last_name=last_name,
+                website=f"https://erebos.xyz",
+                company=f"f"
+            )
+        
         user.save()
 
+        parent_page.add_child(instance=profile_page)
+        profile_page.save_revision().publish()
+        
         return user
 
     # Called when a user registers
@@ -174,7 +246,6 @@ class RegistrationFormPage(AbstractEmailForm):
         user=self.create_user(
             username=form.cleaned_data['username'],
             customer_id=form.cleaned_data['customer_id'],
-            birthdate=form.cleaned_data['birthdate'],
             telephone=form.cleaned_data['telephone'],
             address=form.cleaned_data['address'],
             city=form.cleaned_data['city'],
@@ -183,10 +254,12 @@ class RegistrationFormPage(AbstractEmailForm):
             country=form.cleaned_data['country'],
             newsletter=form.cleaned_data['newsletter'],
             platform_data=form.cleaned_data['platform_data'],
-            education_data=form.cleaned_data['education_data'],
             sources=form.cleaned_data['sources'],
             verified=form.cleaned_data['verified'],
+            first_name=form.cleaned_data['first_name'],
+            last_name=form.cleaned_data['last_name'],
             password=form.cleaned_data['password'],
+            gift_code=form.cleaned_data['gift_code'],
             registration_data=json.dumps(form.cleaned_data, cls=DjangoJSONEncoder),
         )
 
