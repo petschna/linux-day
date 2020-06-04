@@ -17,13 +17,13 @@ from datetime import timedelta
 env = os.environ.copy()
 
 
-#> Root paths
+# > Root paths
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 
-#> Application definition
+# > Application definition
 # A list of strings designating all applications that are enabled in this
 # Django installation.
 # See https://docs.djangoproject.com/en/stable/ref/settings/#installed-apps
@@ -36,42 +36,42 @@ INSTALLED_APPS = [
     # https://intranet.torchbox.com/delivering-projects/tech/scoutapp/
     # According to the official docs, it's important that Scout is listed
     # first - http://help.apm.scoutapp.com/#django.
-    #'scout_apm.django',
+    # 'scout_apm.django',
 
     # Our own apps
     'esite.api',
     'esite.core',
-    'esite.registration',
+    # 'esite.registration',
     'esite.user',
-    'esite.customer',
+    # 'esite.customer',
     'esite.home',
-    'esite.profile',
-    'esite.caching',
-    'esite.gift',
-    'esite.event',
+    # 'esite.profile',
+    # 'esite.caching',
+    # 'esite.gift',
+    # 'esite.event',
     'esite.session',
-    #'esite.jwtauth',
-    #'esite.charm',
-    #'esite.articles',
-    ##'esite.documents',
-    ##'esite.forms',
-    #'esite.images',
-    'esite.navigation',
-    #'esite.news',
-    ##'esite.people',
-    #'esite.rss',
-    'esite.search',
-    #'esite.standardpages',
-    'esite.utils',
-    'esite.survey',
+    # 'esite.jwtauth',
+    # 'esite.charm',
+    # 'esite.articles',
+    # 'esite.documents',
+    # 'esite.forms',
+    # 'esite.images',
+    # 'esite.navigation',
+    # 'esite.news',
+    # 'esite.people',
+    # 'esite.rss',
+    # 'esite.search',
+    # 'esite.standardpages',
+    # 'esite.utils',
+    # 'esite.survey',
 
-    'esite.colorfield',
-    'esite.log',
+    # 'esite.colorfield',
+    # 'esite.log',
 
     # Wagtail core apps
-    #'wagtail.api.v2',
+    # 'wagtail.api.v2',
     'wagtail.contrib.modeladmin',
-    #'wagtail.contrib.postgres_search',
+    # 'wagtail.contrib.postgres_search',
     'wagtail.contrib.settings',
     'wagtail.contrib.search_promotions',
     'wagtail.contrib.forms',
@@ -95,10 +95,10 @@ INSTALLED_APPS = [
     'taggit',
     'captcha',
     'wagtailcaptcha',
-    #"grapple",
+    # "grapple",
     "graphene_django",
     'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
-    #"channels",
+    # "channels",
     'wagtailfontawesome',
 
     # Django core apps
@@ -111,11 +111,11 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
 
     'pattern_library',
-    'esite.project_styleguide.apps.ProjectStyleguideConfig',
+    # 'esite.project_styleguide.apps.ProjectStyleguideConfig',
 ]
 
 
-#> Middleware classes
+# > Middleware classes
 # In MIDDLEWARE, each middleware component is represented by a string: the full
 # Python path to the middleware factory’s class or function name.
 # https://docs.djangoproject.com/en/stable/ref/settings/#middleware
@@ -128,7 +128,7 @@ MIDDLEWARE = [
     # According to the official documentation it should be listed underneath
     # SecurityMiddleware.
     # http://whitenoise.evans.io/en/stable/#quickstart-for-django-apps
-    #'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
 
     # Django core middleware
     'django.middleware.security.SecurityMiddleware',
@@ -146,7 +146,7 @@ MIDDLEWARE = [
 ]
 
 
-#> Template definition
+# > Template definition
 # A list containing the settings for all template engines to be used with
 # Django.
 # See https://docs.djangoproject.com/en/stable/ref/settings/#templates
@@ -174,19 +174,19 @@ TEMPLATES = [
     },
 ]
 
-#> CORS origin
+# > CORS origin
 # If True, the whitelist will not be used and all origins will be accepted.
 # See https://pypi.org/project/django-cors-headers/
 CORS_ORIGIN_ALLOW_ALL = True
 
 
-#> URL configuration
+# > URL configuration
 # A string representing the full Python import path to your root URL configuration.
 # See https://docs.djangoproject.com/en/stable/ref/settings/#root-urlconf
 ROOT_URLCONF = 'esite.urls'
 
 
-#> WSGI application path
+# > WSGI application path
 # The full Python path of the WSGI application object that Django’s built-in
 # servers (e.g. runserver) will use.
 # See https://docs.djangoproject.com/en/stable/ref/settings/#wsgi-application
@@ -218,10 +218,6 @@ WAGTAILSEARCH_BACKENDS = {
 GRAPHQL_API = {
     'APPS': [
         'home',
-        'profile',
-        'registration',
-        'survey',
-        'event',
     ],
     'PREFIX': {
     },
@@ -232,10 +228,10 @@ GRAPHQL_API = {
 }
 
 
-#> Grapple Config:
+# > Grapple Config:
 GRAPHENE = {
     'SCHEMA': 'esite.api.schema.schema',
-    #'SCHEMA': 'grapple.schema.schema',
+    # 'SCHEMA': 'grapple.schema.schema',
     'MIDDLEWARE': [
         'graphql_jwt.middleware.JSONWebTokenMiddleware',
     ],
@@ -251,14 +247,14 @@ GRAPHQL_JWT = {
 
 API_APPS = {
     "home": "",
-    "profile": "",
-    "registration": "",
-#    "survey": "",
-    "event": "",
+    # "profile": "",
+    # "registration": "",
+    #    "survey": "",
+    # "event": "",
 }
 
 
-#> Password validation
+# > Password validation
 # The list of validators that are used to check the strength of passwords, see
 # https://docs.djangoproject.com/en/stable/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
@@ -299,7 +295,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-#> Staticfile directory
+# > Staticfile directory
 # This is where Django will look for static files outside the directories of
 # applications which are used by default.
 # https://docs.djangoproject.com/en/stable/ref/settings/#staticfiles-dirs
@@ -335,7 +331,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 
-#> Wagtail settings
+# > Wagtail settings
 
 
 # This name is displayed in the Wagtail admin.

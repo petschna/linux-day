@@ -13,7 +13,8 @@ from graphql.validation.rules import NoUnusedFragments, specified_rules
 # We need to update specified_rules in-place so the change appears
 # everywhere it's been imported
 
-specified_rules[:] = [rule for rule in specified_rules if rule is not NoUnusedFragments]
+specified_rules[:] = [
+    rule for rule in specified_rules if rule is not NoUnusedFragments]
 
 
 def create_schema():
@@ -32,23 +33,23 @@ def create_schema():
 
     from .jwtauth.schema import ObtainJSONWebToken
 
-    import esite.registration.schema
-    import esite.event.schema
+    #import esite.registration.schema
+    #import esite.event.schema
     #import esite.session.schema
-    from esite.caching.schema import CacheUser
+    #from esite.caching.schema import CacheUser
 
     class Query(
-        esite.registration.schema.Query,
-        esite.event.schema.Query,
-        #esite.session.schema.Ouery,
+        # esite.registration.schema.Query,
+        # esite.event.schema.Query,
+        # esite.session.schema.Ouery,
         graphene.ObjectType,
         PagesQuery(),
         ImagesQuery(),
         DocumentsQuery(),
-        #SnippetsQuery(),
+        # SnippetsQuery(),
         SettingsQuery(),
-        #SearchQuery(),
-        #RedirectsQuery,
+        # SearchQuery(),
+        # RedirectsQuery,
         *registry.schema,
     ):
         pass
@@ -58,8 +59,8 @@ def create_schema():
 
     def mutation_parameters() -> dict:
         dict_params = {
-            #'login': LoginMutation.Field(),
-            #'logout': LogoutMutation.Field(),
+            # 'login': LoginMutation.Field(),
+            # 'logout': LogoutMutation.Field(),
             'token_auth': ObtainJSONWebToken.Field(),
             'verify_token': graphql_jwt.Verify.Field(),
             'refresh_token': graphql_jwt.Refresh.Field(),
@@ -67,14 +68,13 @@ def create_schema():
             'cache_user': CacheUser.Field(),
         }
         dict_params.update((camel_case_to_spaces(n).replace(' ', '_'), mut.Field())
-                        for n, mut in registry.forms.items())
+                           for n, mut in registry.forms.items())
         return dict_params
 
-
     Mutations = type("Mutation",
-                    (graphene.ObjectType,),
-                    mutation_parameters()
-                    )
+                     (graphene.ObjectType,),
+                     mutation_parameters()
+                     )
 
     return graphene.Schema(
         query=Query,
