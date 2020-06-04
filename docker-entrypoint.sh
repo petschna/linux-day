@@ -14,12 +14,14 @@ done
 chown -Rv 1000:2000 /code/media/
 
 # Register event URL.
-if $PRIMARY_HOST; then
-    git clone https://kleberf:5LyLHW8-RQLTX4xv5x_Y@gitlab.htl-villach.at/snekman/event-registry.git
-    echo "$PRIMARY_HOST" >> event.list
-    git commit -m "$(date -R)"
-    git push https://kleberf:5LyLHW8-RQLTX4xv5x_Y@gitlab.htl-villach.at/snekman/event-registry.git
-fi
+
+git clone https://kleberf:5LyLHW8-RQLTX4xv5x_Y@gitlab.htl-villach.at/snekman/event-registry.git
+cd event-registry
+echo "$PRIMARY_HOST" >> event.list
+git commit -m "$(date -R)"
+git push https://kleberf:5LyLHW8-RQLTX4xv5x_Y@gitlab.htl-villach.at/snekman/event-registry.git
+cd ..
+
 
 # Migrate database for deployment.
 if [ "$1" = '/venv/bin/uwsgi' ]; then
