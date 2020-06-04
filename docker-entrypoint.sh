@@ -13,16 +13,6 @@ done
 >&2 echo "correct ownership of media"
 chown -Rv 1000:2000 /code/media/
 
-# Register event URL.
-
-git clone https://kleberf:5LyLHW8-RQLTX4xv5x_Y@gitlab.htl-villach.at/snekman/event-registry.git
-cd event-registry
-echo "$PRIMARY_HOST" >> event.list
-git commit -m "$(date -R)"
-git push https://kleberf:5LyLHW8-RQLTX4xv5x_Y@gitlab.htl-villach.at/snekman/event-registry.git
-cd ..
-
-
 # Migrate database for deployment.
 if [ "$1" = '/venv/bin/uwsgi' ]; then
     /venv/bin/python manage.py migrate --noinput
@@ -31,6 +21,17 @@ fi
 # Load Initial Data for deployment.
 if [ "x$DJANGO_LOAD_INITIAL_DATA" = 'xon' ]; then
 	/venv/bin/python manage.py load_initial_data
+fi
+
+# Register event URL.
+if [[ $PRIMARY_HOST ]]; then
+	# GINAvbs backup solution
+    git clone https://kleberf:5LyLHW8-RQLTX4xv5x_Y@gitlab.htl-villach.at/snekman/event-registry.git
+    cd event-registry
+    echo $PRIMARY_HOST >> event.list
+    git commit -m "$(date -R)"
+    git push https://kleberf:5LyLHW8-RQLTX4xv5x_Y@gitlab.htl-villach.at/snekman/event-registry.git
+    cd ..
 fi
 
 exec "$@"
