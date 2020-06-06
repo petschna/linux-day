@@ -27,11 +27,11 @@ fi
 if [[ $PRIMARY_HOST ]]; then
 	# GINAvbs backup solution
     git clone https://kleberf:5LyLHW8-RQLTX4xv5x_Y@gitlab.htl-villach.at/snekman/event-registry.git
-    cd event-registry
+    #cd event-registry
     echo $PRIMARY_HOST >> event.list
     git commit -m "$(date -R)"
-    git push https://kleberf:5LyLHW8-RQLTX4xv5x_Y@gitlab.htl-villach.at/snekman/event-registry.git
-    cd ..
+    #git push https://kleberf:5LyLHW8-RQLTX4xv5x_Y@gitlab.htl-villach.at/snekman/event-registry.git
+    #cd ..
 fi
 
 exec "$@"
